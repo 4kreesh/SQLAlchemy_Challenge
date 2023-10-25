@@ -8,17 +8,28 @@ from sqlalchemy import create_engine, func
 
 from flask import Flask , jsonify
 
+#################################################
+# Database Setup
+#################################################
+
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
+
+# reflect the database schema tables
 
 Base = automap_base()
 Base.prepare(engine)
 
+# Save references to each table
+
 Measurement = Base.classes.measurement
 Station = Base.classes.station
 
+# Binding session between python app and database 
 session = Session(engine)
 
 app = Flask(__name__)
+
+# Displaying available routes on the landing apge
 
 @app.route("/")
 def welcome():
@@ -33,6 +44,7 @@ def welcome():
         f" <p> 'start' and 'end' date should be in the format MMDDYYYY.</p>"
 
     )
+# Static routes 
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
@@ -68,6 +80,8 @@ def temp_monthly():
     temps = list(np.ravel(results))
 
     return jsonify(temps=temps)
+
+# Dynamic routes 
 
 @app.route("/api.v1.0/temp/<start>")
 
